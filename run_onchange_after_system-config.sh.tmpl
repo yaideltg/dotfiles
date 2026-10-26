@@ -8,7 +8,10 @@ set -euo pipefail
 echo "Applying system settings..."
 sudo hostnamectl set-hostname {{ .system.hostname | quote }}
 sudo timedatectl set-timezone {{ .system.timezone | quote }}
-sudo timedatectl set-local-rtc {{ if .system.rtc_local }}1{{ else }}0{{ end }}
+# Only touch the RTC mode when it differs: set-local-rtc 1 prints a warning even if already set
+if [ "$(timedatectl show -p LocalRTC --value)" != {{ if .system.rtc_local }}yes{{ else }}no{{ end }} ]; then
+    sudo timedatectl set-local-rtc {{ if .system.rtc_local }}1{{ else }}0{{ end }}
+fi
 sudo localectl set-locale LANG={{ .system.locale }}
 sudo localectl set-keymap {{ .system.keymap | quote }}
 sudo localectl set-x11-keymap {{ .system.x11.layout | quote }} "" {{ .system.x11.variant | quote }}
