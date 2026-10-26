@@ -1,0 +1,10 @@
+#!/bin/bash
+# Block commits that contain secrets
+set -euo pipefail
+
+export PATH="$HOME/.local/bin:$PATH"
+
+if command -v gitleaks &>/dev/null; then
+    exec gitleaks git --pre-commit --staged --redact --verbose
+fi
+exec mise exec gitleaks@latest -- gitleaks git --pre-commit --staged --redact --verbose
