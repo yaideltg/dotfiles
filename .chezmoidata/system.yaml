@@ -1,0 +1,10 @@
+system:
+  hostname: personal
+  timezone: Europe/Paris
+  locale: en_US.UTF-8
+  keymap: us-altgr-intl
+  x11:
+    layout: us
+    variant: altgr-intl
+  # Clock kept in local time (shared with another OS on this machine)
+  rtc_local: true

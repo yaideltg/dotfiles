@@ -1,0 +1,15 @@
+{{ if and (eq .chezmoi.os "linux") (eq .chezmoi.osRelease.id "fedora") .personal -}}
+#!/bin/bash
+set -euo pipefail
+
+# Rerun whenever .chezmoidata/system.yaml changes
+# system hash: {{ .system | toJson | sha256sum }}
+
+echo "Applying system settings..."
+sudo hostnamectl set-hostname {{ .system.hostname | quote }}
+sudo timedatectl set-timezone {{ .system.timezone | quote }}
+sudo timedatectl set-local-rtc {{ if .system.rtc_local }}1{{ else }}0{{ end }}
+sudo localectl set-locale LANG={{ .system.locale }}
+sudo localectl set-keymap {{ .system.keymap | quote }}
+sudo localectl set-x11-keymap {{ .system.x11.layout | quote }} "" {{ .system.x11.variant | quote }}
+{{ end -}}
