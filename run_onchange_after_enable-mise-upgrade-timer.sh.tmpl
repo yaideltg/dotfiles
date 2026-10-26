@@ -1,0 +1,12 @@
+{{ if and (eq .chezmoi.os "linux") (eq .chezmoi.osRelease.id "fedora") .personal -}}
+#!/bin/bash
+set -euo pipefail
+
+# Rerun whenever the unit files change
+# service hash: {{ include "dot_config/systemd/user/mise-upgrade.service" | sha256sum }}
+# timer hash: {{ include "dot_config/systemd/user/mise-upgrade.timer" | sha256sum }}
+
+echo "Enabling mise upgrade timer..."
+systemctl --user daemon-reload
+systemctl --user enable --now mise-upgrade.timer
+{{ end -}}

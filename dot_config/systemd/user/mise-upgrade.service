@@ -1,0 +1,7 @@
+[Unit]
+Description=Upgrade mise-managed tools
+
+[Service]
+Type=oneshot
+Environment=MISE_YES=1
+ExecStart=%h/.local/bin/mise upgrade

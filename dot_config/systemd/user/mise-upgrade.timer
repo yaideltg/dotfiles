@@ -1,0 +1,11 @@
+[Unit]
+Description=Daily upgrade of mise-managed tools
+
+[Timer]
+OnCalendar=daily
+RandomizedDelaySec=1h
+# Catch up on the next login if the machine was off
+Persistent=true
+
+[Install]
+WantedBy=timers.target
