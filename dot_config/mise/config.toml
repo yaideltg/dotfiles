@@ -1,3 +1,6 @@
 [tools]
 claude = "latest"
 cliamp = "latest"
+gh = "latest"
+gitleaks = "latest"
+hugo-extended = "latest"
