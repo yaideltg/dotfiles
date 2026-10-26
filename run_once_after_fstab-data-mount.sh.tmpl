@@ -1,0 +1,25 @@
+{{ if and (eq .chezmoi.os "linux") (eq .chezmoi.osRelease.id "fedora") .personal -}}
+#!/bin/bash
+set -euo pipefail
+
+DEVICE="/dev/nvme0n1p7"
+MOUNTPOINT="/media/data"
+ENTRY="$DEVICE $MOUNTPOINT ntfs defaults 0 0"
+
+# Never write an fstab line for a missing device; it would break boot
+if [ ! -b "$DEVICE" ]; then
+    echo "$DEVICE not found, skipping fstab entry for $MOUNTPOINT."
+    exit 0
+fi
+
+if grep -qE "^[[:space:]]*$DEVICE[[:space:]]" /etc/fstab; then
+    echo "$DEVICE already in /etc/fstab."
+else
+    echo "Adding $DEVICE to /etc/fstab..."
+    echo "$ENTRY" | sudo tee -a /etc/fstab >/dev/null
+    sudo systemctl daemon-reload
+fi
+
+sudo mkdir -p "$MOUNTPOINT"
+mountpoint -q "$MOUNTPOINT" || sudo mount "$MOUNTPOINT"
+{{ end -}}
