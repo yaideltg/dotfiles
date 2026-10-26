@@ -18,3 +18,11 @@ Managed with [chezmoi](https://www.chezmoi.io). Target: Fedora 44 Workstation (G
 
 ## What is deliberately not stored (public repo)
 Bookmarks, history, cookies, saved logins, Firefox profile databases, GnuCash books and anything under `/media/data`, online accounts, SSH/GPG keys. Sync Firefox through Firefox Sync, and keep the data partition separately.
+
+## Script order
+chezmoi runs `before` scripts, then writes files, then `after` scripts, each group alphabetically, so scripts carry a numeric prefix:
+1. before: 10 debloat, 20 install packages (dnf, flatpak, mise), 30 NTFS mount, 40 system settings
+2. files: configs, units, desktop entries, flatpak overrides
+3. after: 10 mise tools, 20 mise timer, 30 Bitwarden agent, 40 Emacs daemon, 50 cliamp, 60 Firefox, 70 GNOME dconf, 80 repo remote
+
+Anything that configures an app goes after the step that installs it.

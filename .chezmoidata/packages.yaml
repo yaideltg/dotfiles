@@ -1,6 +1,7 @@
 packages:
   fedora:
     dnf:
+      - firefox
       - emacs
       - ripgrep
       - calibre
