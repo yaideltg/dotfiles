@@ -19,6 +19,10 @@ systemctl --user daemon-reload
 systemctl --user enable emacs.service
 # Only start it now inside a graphical session; otherwise it starts at next login
 if systemctl --user is-active --quiet graphical-session.target; then
+    if [ ! -d "$HOME/.config/emacs/elpa" ]; then
+        echo "First Emacs start: installing and compiling packages, this can take several minutes..."
+        echo "Follow progress with: journalctl --user -fu emacs.service"
+    fi
     systemctl --user restart emacs.service
 fi
 
