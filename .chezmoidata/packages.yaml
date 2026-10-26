@@ -3,6 +3,14 @@ packages:
     dnf:
       - emacs
       - ripgrep
+      - calibre
+      - gnucash
+      # Jinx (Emacs spell checker) compiles its native module against enchant
+      - gcc
+      - pkgconf-pkg-config
+      - enchant2-devel
+      - hunspell-en-US
+      - hunspell-es-ES
     flatpak:
       - com.bitwarden.desktop
     # binary: install script URL (other CLI tools go in dot_config/mise/config.toml)

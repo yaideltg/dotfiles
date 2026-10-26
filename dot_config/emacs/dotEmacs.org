@@ -29,14 +29,17 @@ block.
 
 * Interface tweaks
 
-The output of =custom-set-variables= goes to its own =custom.el= file (see =init.el=), so it never mixes with
-the customizations made in this file. I have had some rough times debugging stuff because it was defined
-automatically by Emacs in the =custom-set-variables= section of the =init= file.
+=custom-file= points to =/dev/null= (see =init.el=), so Emacs never writes Customize output to disk and
+every setting lives in this file. Settings made through the Customize UI only last for the session.
 
-The menubar, scrollbar and toolbar are disabled in =early-init.el=, before the first frame is drawn, which
-avoids the flicker at startup. The startup buffer is inhibited too:
+The menubar, toolbar and scrollbar are disabled and frames start maximized. These go in =default-frame-alist=
+so they also apply to the frames =emacsclient= creates from the daemon. The startup buffer is inhibited too:
 
 #+begin_src emacs-lisp
+  (menu-bar-mode -1)
+  (tool-bar-mode -1)
+  (scroll-bar-mode -1)
+  (add-to-list 'default-frame-alist '(fullscreen . maximized))
   (setq inhibit-startup-message t)
 #+end_src
 
@@ -177,14 +180,16 @@ one can have a regular-editing preset and another for presentation-mode. A famil
     (require 'color)
     (defun my/pulsar-sync-tty-color (&rest _)
       "Blend the theme blue into the background (about 50%) for the pulse."
-      (let ((bg (color-name-to-rgb (face-background 'default nil t)))
-            (accent (color-name-to-rgb "#7aa2f7")))
+      ;; In the daemon there is no frame yet, so the background may not resolve.
+      (when-let* ((bg (color-name-to-rgb (face-background 'default nil t)))
+                  (accent (color-name-to-rgb "#7aa2f7")))
         (setq pulsar-tty-color
               (apply #'color-rgb-to-hex
                      (append (cl-mapcar (lambda (b a) (+ b (* 0.3 (- a b)))) bg accent)
                              '(2))))))
     (my/pulsar-sync-tty-color)
     (add-hook 'enable-theme-functions #'my/pulsar-sync-tty-color)
+    (add-hook 'server-after-make-frame-hook #'my/pulsar-sync-tty-color)
 
     (setq pulsar-pulse t)
     (setq pulsar-delay 0.075)

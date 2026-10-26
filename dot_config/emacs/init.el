@@ -1,8 +1,8 @@
 ;;; init.el --- User Emacs configuration -*- lexical-binding: t -*-
 
-;; Keep Custom's output (mainly `package-selected-packages') in its own file.
-(setq custom-file (locate-user-emacs-file "custom.el"))
-(load custom-file :noerror :nomessage)
+;; Never let Custom write to a file: all configuration lives in dotEmacs.org,
+;; so anything set through the Customize UI is discarded instead of lingering.
+(setq custom-file null-device)
 
 (require 'package)
 ;; Add MELPA to the packages list
