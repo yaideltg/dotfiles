@@ -1,0 +1,5 @@
+# cliamp app icon (mise installs only the binary; this mirrors cliamp's install.sh)
+[".local/share/icons/hicolor/512x512/apps/cliamp.png"]
+type = "file"
+url = "https://raw.githubusercontent.com/bjarneo/cliamp/HEAD/Cliamp.png"
+refreshPeriod = "168h"

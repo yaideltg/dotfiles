@@ -1,0 +1,16 @@
+{{ if and (eq .chezmoi.os "linux") (eq .chezmoi.osRelease.id "fedora") .personal -}}
+#!/bin/bash
+set -euo pipefail
+
+# Rerun whenever the cliamp desktop entries change
+# cliamp.desktop hash: {{ include "dot_local/private_share/private_applications/cliamp.desktop.tmpl" | sha256sum }}
+# cliamp-url-handler.desktop hash: {{ include "dot_local/private_share/private_applications/cliamp-url-handler.desktop.tmpl" | sha256sum }}
+
+echo "Refreshing desktop entry and icon caches for cliamp..."
+if command -v update-desktop-database > /dev/null; then
+    update-desktop-database "$HOME/.local/share/applications" 2>/dev/null || true
+fi
+if command -v gtk-update-icon-cache > /dev/null; then
+    gtk-update-icon-cache -q "$HOME/.local/share/icons/hicolor" 2>/dev/null || true
+fi
+{{ end -}}
