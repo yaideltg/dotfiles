@@ -12,6 +12,8 @@ ExecStart=/usr/bin/emacs --fg-daemon
 # Emacs exits with status 15 after SIGTERM, systemd's default KillSignal
 SuccessExitStatus=15
 Restart=on-failure
+# The first start installs and byte-compiles all packages, far beyond the 45s default
+TimeoutStartSec=15min
 
 [Install]
 WantedBy=graphical-session.target
