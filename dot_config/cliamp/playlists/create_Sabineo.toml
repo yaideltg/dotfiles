@@ -1,0 +1,40 @@
+[[track]]
+path = "/media/data/music/Joaquín Sabina/[1996] - Yo mi me contigo/Seis_de_la_Ma_ana.mp3"
+title = "Seis de la Mañana"
+artist = "Joaquín Sabina"
+album = "Yo, Mi, Me, Contigo"
+genre = "Genre:"
+track_number = 11
+
+[[track]]
+path = "/media/data/music/Joaquín Sabina/[1996] - Yo mi me contigo/Tan_Joven_y_Tan_Viejo.mp3"
+title = "Tan Joven y Tan Viejo"
+artist = "Joaquín Sabina"
+album = "Yo, Mi, Me, Contigo"
+genre = "Genre:"
+track_number = 13
+
+[[track]]
+path = "/media/data/music/Joaquín Sabina/[1996] - Yo mi me contigo/Y_Sin_Embargo.mp3"
+title = "Y Sin Embargo"
+artist = "Joaquín Sabina"
+album = "Yo, Mi, Me, Contigo"
+genre = "Genre:"
+track_number = 9
+
+[[track]]
+path = "/media/data/music/Joaquín Sabina/[2020] - Contigo/Aves_De_Paso.mp3"
+title = "Aves De Paso"
+artist = "Joaquín Sabina"
+album = "Contigo"
+genre = "Genre:"
+year = 2020
+track_number = 2
+
+[[track]]
+path = "/media/data/music/Joaquín Sabina/[2014] - El Simbolo y el Cuate/Cantares / Y Nos Dieron las Diez.mp3"
+title = "Cantares / Y Nos Dieron las Diez"
+artist = "Joaquín Sabina"
+album = "El Simbolo y el Cuate"
+year = 2014
+track_number = 5

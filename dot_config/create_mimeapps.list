@@ -1,0 +1,6 @@
+[Default Applications]
+x-scheme-handler/claude-cli=claude-code-url-handler.desktop
+application/epub+zip=calibre-ebook-viewer.desktop
+
+[Added Associations]
+application/epub+zip=calibre-ebook-viewer.desktop;
