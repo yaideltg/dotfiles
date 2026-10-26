@@ -1,0 +1,4 @@
+# Activate mise-managed tools
+if [ -x "$HOME/.local/bin/mise" ]; then
+    eval "$("$HOME/.local/bin/mise" activate bash)"
+fi

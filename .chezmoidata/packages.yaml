@@ -1,0 +1,10 @@
+packages:
+  fedora:
+    dnf:
+      - emacs
+      - ripgrep
+    flatpak:
+      - com.bitwarden.desktop
+    # binary: install script URL (other CLI tools go in dot_config/mise/config.toml)
+    curl:
+      mise: https://mise.run

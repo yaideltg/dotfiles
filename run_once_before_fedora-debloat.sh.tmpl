@@ -1,0 +1,39 @@
+{{ if and (eq .chezmoi.os "linux") (eq .chezmoi.osRelease.id "fedora") .personal -}}
+#!/bin/bash
+set -euo pipefail
+
+echo "Starting one-time Fedora system debloat..."
+
+# 1. Handle DNF System Packages
+REMOVE_DNF=()
+{{ range .debloat.fedora.dnf -}}
+if rpm -q {{ . | quote }} &>/dev/null; then
+    REMOVE_DNF+=({{ . | quote }})
+fi
+{{ end -}}
+
+if [ ${#REMOVE_DNF[@]} -gt 0 ]; then
+    echo "Removing debloat packages: ${REMOVE_DNF[*]}"
+    sudo dnf remove -y "${REMOVE_DNF[@]}"
+else
+    echo "No bloated dnf packages found to remove."
+fi
+
+# 2. Handle Flatpak Packages
+if command -v flatpak &>/dev/null; then
+    echo "Checking for bloated Flatpaks..."
+    REMOVE_FLATPAK=()
+    {{ range .debloat.fedora.flatpak -}}
+    if flatpak info {{ . | quote }} &>/dev/null; then
+        REMOVE_FLATPAK+=({{ . | quote }})
+    fi
+    {{ end -}}
+
+    if [ ${#REMOVE_FLATPAK[@]} -gt 0 ]; then
+        echo "Removing Flatpaks: ${REMOVE_FLATPAK[*]}"
+        flatpak uninstall -y "${REMOVE_FLATPAK[@]}"
+    fi
+fi
+
+echo "Debloat process finished!"
+{{ end -}}

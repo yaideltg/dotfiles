@@ -1,0 +1,54 @@
+{{ if and (eq .chezmoi.os "linux") (eq .chezmoi.osRelease.id "fedora") .personal -}}
+#!/bin/bash
+set -euo pipefail
+
+# Script installers put binaries here; make sure we can find them
+export PATH="$HOME/.local/bin:$PATH"
+
+echo "Checking for missing system packages..."
+
+# 1. Handle DNF System Packages
+# Filter out already installed packages to save time
+MISSING_DNF=()
+{{ range .packages.fedora.dnf -}}
+if ! rpm -q {{ . | quote }} &>/dev/null; then
+    MISSING_DNF+=({{ . | quote }})
+fi
+{{ end -}}
+
+if [ ${#MISSING_DNF[@]} -gt 0 ]; then
+    echo "Installing missing DNF packages: ${MISSING_DNF[*]}"
+    sudo dnf install -y "${MISSING_DNF[@]}"
+else
+    echo "All DNF packages are already installed."
+fi
+
+# 2. Handle Flatpak Packages
+if command -v flatpak &>/dev/null; then
+    echo "Checking for missing Flatpaks..."
+    flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+
+    MISSING_FLATPAK=()
+    {{ range .packages.fedora.flatpak -}}
+    if ! flatpak info {{ . | quote }} &>/dev/null; then
+        MISSING_FLATPAK+=({{ . | quote }})
+    fi
+    {{ end -}}
+
+    if [ ${#MISSING_FLATPAK[@]} -gt 0 ]; then
+        echo "Installing Flatpaks: ${MISSING_FLATPAK[*]}"
+        flatpak install -y flathub "${MISSING_FLATPAK[@]}"
+    else
+        echo "All Flatpaks are already installed."
+    fi
+fi
+
+# 3. Handle curl/script installed packages
+echo "Checking for missing curl script packages..."
+{{ range $binary, $url := .packages.fedora.curl -}}
+if ! command -v {{ $binary | quote }} &>/dev/null; then
+    echo "Installing {{ $binary }} from script..."
+    curl -fsSL {{ $url | quote }} | bash
+fi
+{{ end -}}
+{{ end -}}

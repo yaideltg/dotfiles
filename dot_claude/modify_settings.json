@@ -1,0 +1,8 @@
+{{- /* chezmoi:modify-template */ -}}
+{{- /* Merge into whatever is there; on a fresh machine the file (and ~/.claude) won't exist yet */ -}}
+{{- $settings := dict -}}
+{{- $current := trim .chezmoi.stdin -}}
+{{- if $current -}}
+{{-   $settings = fromJson $current -}}
+{{- end -}}
+{{ setValueAtPath "env.DISABLE_AUTOUPDATER" "1" $settings | toPrettyJson "  " }}

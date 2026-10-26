@@ -1,0 +1,17 @@
+debloat:
+  fedora:
+    dnf:
+      - gnome-weather
+      - gnome-contacts
+      - gnome-maps
+      - gnome-boxes
+      - showtime
+      - gnome-tour
+      - yelp
+      - snapshot
+      - simple-scan
+      - gnome-connections
+      - gnome-clocks
+      - mediawriter
+    flatpak:
+      - org.gnome.Decibels

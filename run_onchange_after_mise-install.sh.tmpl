@@ -1,0 +1,12 @@
+{{ if and (eq .chezmoi.os "linux") (eq .chezmoi.osRelease.id "fedora") .personal -}}
+#!/bin/bash
+set -euo pipefail
+
+# Rerun whenever the tool list changes
+# mise config hash: {{ include "dot_config/mise/config.toml" | sha256sum }}
+
+export PATH="$HOME/.local/bin:$PATH"
+
+echo "Installing mise tools..."
+mise install
+{{ end -}}
