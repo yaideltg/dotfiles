@@ -1,0 +1,18 @@
+{{ if and (eq .chezmoi.os "linux") (eq .chezmoi.osRelease.id "fedora") .personal -}}
+#!/bin/bash
+set -euo pipefail
+
+export PATH="$HOME/.local/bin:$PATH"
+
+# mise installs gh on first use if it is missing
+gh() { mise exec gh@latest -- gh "$@"; }
+
+if gh auth status --hostname github.com &>/dev/null; then
+    echo "gh is already logged in."
+    exit 0
+fi
+
+# The SSH key is already on GitHub, so don't upload it again
+echo "Logging in to GitHub CLI..."
+gh auth login --hostname github.com --git-protocol ssh --skip-ssh-key --web
+{{ end -}}
