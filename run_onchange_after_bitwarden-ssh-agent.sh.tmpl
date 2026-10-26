@@ -1,0 +1,24 @@
+{{ if and (eq .chezmoi.os "linux") (eq .chezmoi.osRelease.id "fedora") .personal -}}
+#!/bin/bash
+set -euo pipefail
+
+SOCK="$HOME/.var/app/com.bitwarden.desktop/data/.bitwarden-ssh-agent.sock"
+
+# gcr-ssh-agent units are masked by chezmoi; stop the copy running now and
+# point the current session at Bitwarden (environment.d covers later logins)
+systemctl --user stop gcr-ssh-agent.socket gcr-ssh-agent.service 2>/dev/null || true
+systemctl --user daemon-reload
+systemctl --user set-environment SSH_AUTH_SOCK="$SOCK"
+
+# The agent can only be switched on inside the Bitwarden app
+if SSH_AUTH_SOCK="$SOCK" ssh-add -L &>/dev/null; then
+    echo "Bitwarden SSH agent is serving keys."
+else
+    cat <<'MSG'
+Bitwarden SSH agent is not running yet. To finish the setup:
+  1. Open Bitwarden and log in
+  2. Settings -> Enable SSH agent, and turn on "Ask for authorization when using SSH agent"
+  3. Check with: ssh-add -L && ssh -T git@github.com
+MSG
+fi
+{{ end -}}
