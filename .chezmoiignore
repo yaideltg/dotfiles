@@ -7,3 +7,6 @@
 !.config/emacs/init.el
 !.config/emacs/dotEmacs.org
 !.config/emacs/elfeed.org
+
+# Firefox is only configured through user.js and the policy (see run_onchange_after_firefox.sh.tmpl)
+.config/mozilla

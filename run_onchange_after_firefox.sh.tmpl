@@ -1,0 +1,35 @@
+{{ if and (eq .chezmoi.os "linux") (eq .chezmoi.osRelease.id "fedora") .personal -}}
+#!/bin/bash
+set -euo pipefail
+
+# Rerun whenever the preferences or extension policy change
+# user.js hash: {{ includeTemplate "firefox-user.js" . | sha256sum }}
+# policies hash: {{ includeTemplate "firefox-policies.json" . | sha256sum }}
+
+if ! command -v firefox &>/dev/null; then
+    echo "Firefox not installed yet, skipping."
+    exit 0
+fi
+
+# Extensions and default search engine through the system policy
+echo "Installing the Firefox policy (extensions, search)..."
+sudo install -d /etc/firefox/policies
+sudo tee /etc/firefox/policies/policies.json >/dev/null <<'POLICY_EOF'
+{{ includeTemplate "firefox-policies.json" . }}
+POLICY_EOF
+
+# Firefox creates the profile on first run; do that headlessly if it is missing
+profiles="$HOME/.config/mozilla/firefox"
+if ! compgen -G "$profiles/*.default-release" >/dev/null; then
+    echo "Creating the Firefox profile..."
+    timeout 20 firefox --headless --screenshot /dev/null about:blank >/dev/null 2>&1 || true
+fi
+
+for profile in "$profiles"/*.default-release; do
+    [ -d "$profile" ] || continue
+    echo "Writing user.js to $profile"
+    cat >"$profile/user.js" <<'USERJS_EOF'
+{{ includeTemplate "firefox-user.js" . }}
+USERJS_EOF
+done
+{{ end -}}
