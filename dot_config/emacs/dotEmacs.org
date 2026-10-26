@@ -118,8 +118,7 @@ Other Prot's packages complement the themes. [[https://protesilaos.com/emacs/spa
     )
 #+end_src
 
-Then, [[https://protesilaos.com/emacs/fontaine][fontaine]] allows the user to define detailed font configurations and set them on demand. For example,
-one can have a regular-editing preset and another for presentation-mode. A family left unset in the =t= preset means fontaine does not touch it.
+Then, [[https://protesilaos.com/emacs/fontaine][fontaine]] allows the user to define detailed font configurations and set them on demand. For example, one can have a regular-editing preset and another for presentation-mode. A family left unset in the =t= preset means fontaine does not touch it.
 
 #+begin_src emacs-lisp
   (use-package fontaine
@@ -133,7 +132,7 @@ one can have a regular-editing preset and another for presentation-mode. A famil
             (small
              :default-height 90)
             (regular
-             :default-height 130)
+             :default-height 120)
             (medium
              :default-height 150)
             (large
