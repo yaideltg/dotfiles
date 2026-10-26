@@ -1,6 +1,22 @@
 {
   "policies": {
     "SearchEngines": { "Default": "DuckDuckGo" },
+    "SanitizeOnShutdown": {
+      "Exceptions": [
+        "https://tuta.com",
+        "https://proton.me",
+        "https://mail.proton.me",
+        "https://account.proton.me",
+        "https://google.com",
+        "https://www.google.com",
+        "https://accounts.google.com",
+        "https://mail.google.com",
+        "https://github.com",
+        "https://cea.talkspirit.com",
+        "https://www.tchap.gouv.fr",
+        "https://auth.agent.education.tchap.gouv.fr"
+      ]
+    },
     "ExtensionSettings": {
       "uBlock0@raymondhill.net": {
         "installation_mode": "normal_installed",

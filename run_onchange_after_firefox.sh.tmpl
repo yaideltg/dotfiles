@@ -2,7 +2,7 @@
 #!/bin/bash
 set -euo pipefail
 
-# Rerun whenever the preferences or extension policy change
+# Rerun whenever the preferences or policy change
 # user.js hash: {{ includeTemplate "firefox-user.js" . | sha256sum }}
 # policies hash: {{ includeTemplate "firefox-policies.json" . | sha256sum }}
 
@@ -12,7 +12,7 @@ if ! command -v firefox &>/dev/null; then
 fi
 
 # Extensions and default search engine through the system policy
-echo "Installing the Firefox policy (extensions, search)..."
+echo "Installing the Firefox policy (extensions, search, sign-ins kept on shutdown)..."
 sudo install -d /etc/firefox/policies
 sudo tee /etc/firefox/policies/policies.json >/dev/null <<'POLICY_EOF'
 {{ includeTemplate "firefox-policies.json" . }}
