@@ -4,7 +4,9 @@ Managed with [chezmoi](https://www.chezmoi.io). Target: Fedora 44 Workstation (G
 
     sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply <github-user>
 
-Answer `yes` to "Is this a personal machine" to enable the install/system scripts.
+## Rules to follow
+
+- Don't state the "Co-Authored by Cluade" statement when working with git. Work like it's only me doing the work.
 
 ## What is restored
 - Shell, git, Emacs, mise tools, systemd user units, Bitwarden SSH agent, cliamp

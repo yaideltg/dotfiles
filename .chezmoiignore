@@ -12,5 +12,7 @@
 .config/mozilla
 
 # Notes for the repo only
-README.md
-DCONF.md
+CLAUDE.md
+
+# Emacs lock files
+**/.#*
