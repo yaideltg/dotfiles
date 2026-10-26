@@ -1,0 +1,3 @@
+* News                                                      :elfeed:news:
+** Tech                                                              :tech:
+*** [[https://omarchy.org/news/rss.xml][Omarchy]]

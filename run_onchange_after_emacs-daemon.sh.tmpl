@@ -1,0 +1,28 @@
+{{ if and (eq .chezmoi.os "linux") (eq .chezmoi.osRelease.id "fedora") .personal -}}
+#!/bin/bash
+set -euo pipefail
+
+# Rerun whenever the unit or the desktop entry change
+# service hash: {{ include "dot_config/systemd/user/emacs.service" | sha256sum }}
+# emacsclient.desktop hash: {{ include "dot_local/private_share/private_applications/emacsclient.desktop" | sha256sum }}
+
+# Emacs prefers ~/.emacs.d over ~/.config/emacs whenever it exists, and creates
+# it if Emacs ever ran before the XDG config was in place. Move a config-less one aside.
+if [ -d "$HOME/.emacs.d" ] && [ ! -e "$HOME/.emacs.d/init.el" ] && [ ! -e "$HOME/.emacs.d/early-init.el" ]; then
+    backup="$HOME/.emacs.d.bak-$(date +%Y%m%d%H%M%S)"
+    echo "Moving stale ~/.emacs.d to $backup so ~/.config/emacs is used..."
+    mv "$HOME/.emacs.d" "$backup"
+fi
+
+echo "Enabling Emacs daemon..."
+systemctl --user daemon-reload
+systemctl --user enable emacs.service
+# Only start it now inside a graphical session; otherwise it starts at next login
+if systemctl --user is-active --quiet graphical-session.target; then
+    systemctl --user restart emacs.service
+fi
+
+if command -v update-desktop-database > /dev/null; then
+    update-desktop-database "$HOME/.local/share/applications" 2>/dev/null || true
+fi
+{{ end -}}

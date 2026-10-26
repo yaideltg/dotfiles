@@ -1,3 +1,9 @@
 # Emacs backup and autosave files
 **/*~
 **/#*#
+
+# Emacs state generated at runtime inside ~/.config/emacs
+.config/emacs/*
+!.config/emacs/init.el
+!.config/emacs/dotEmacs.org
+!.config/emacs/elfeed.org
