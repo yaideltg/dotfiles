@@ -10,3 +10,7 @@
 
 # Firefox is only configured through user.js and the policy (see run_onchange_after_firefox.sh.tmpl)
 .config/mozilla
+
+# Notes for the repo only
+README.md
+DCONF.md
