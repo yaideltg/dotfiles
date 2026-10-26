@@ -9,7 +9,7 @@ Managed with [chezmoi](https://www.chezmoi.io). Target: Fedora 44 Workstation (G
 - Don't state the "Co-Authored by Cluade" statement when working with git. Work like it's only me doing the work.
 
 ## What is restored
-- Shell, git, Emacs, mise tools, systemd user units, Bitwarden SSH agent, cliamp
+- Shell (incl. uv completion), git, Emacs, mise tools (incl. uv), systemd user units, Bitwarden SSH agent, cliamp
 - Packages (`.chezmoidata/packages.yaml`), removed bloat (`debloat.yaml`), NTFS data mount
 - GNOME: keybindings, dock favorites, app grid layout/folders, wallpaper, night light, power, Ptyxis, GnuCash prefs (`.chezmoitemplates/gnome-dconf.ini`, loaded with `dconf load` when it changes)
 - Firefox: `user.js` prefs and force-installed extensions (uBlock Origin, JShelter, Bitwarden) via policy
