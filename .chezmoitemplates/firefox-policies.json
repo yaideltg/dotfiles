@@ -2,6 +2,7 @@
   "policies": {
     "SearchEngines": { "Default": "DuckDuckGo" },
     "SanitizeOnShutdown": {
+      "Locked": false,
       "Exceptions": [
         "https://tuta.com",
         "https://proton.me",

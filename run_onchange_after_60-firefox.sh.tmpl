@@ -11,8 +11,8 @@ if ! command -v firefox &>/dev/null; then
     exit 0
 fi
 
-# Extensions and default search engine through the system policy
-echo "Installing the Firefox policy (extensions, search, sign-ins kept on shutdown)..."
+# Extensions, default search engine and clear-on-shutdown exceptions through the system policy
+echo "Installing the Firefox policy (extensions, search, shutdown exceptions)..."
 sudo install -d /etc/firefox/policies
 sudo tee /etc/firefox/policies/policies.json >/dev/null <<'POLICY_EOF'
 {{ includeTemplate "firefox-policies.json" . }}
