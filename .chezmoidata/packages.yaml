@@ -5,6 +5,7 @@ packages:
       - emacs
       - calibre
       - gnucash
+      - mpv
       # Jinx (Emacs spell checker) compiles its native module against enchant
       - gcc
       - pkgconf-pkg-config
@@ -19,9 +20,20 @@ packages:
       - fd-find
       - zoxide
       - tealdeer
+    # Installed only when the matching install_<tool> prompt was answered yes
+    # (docker is configured in run_onchange_before_50-docker-setup)
+    optional:
+      docker:
+        - moby-engine
+        - docker-cli
+        - docker-compose
+        - docker-buildx
+      apptainer:
+        - apptainer
     flatpak:
       - com.bitwarden.desktop
       - md.obsidian.Obsidian
+      - org.signal.Signal
     # binary: install script URL (other CLI tools go in dot_config/mise/config.toml)
     curl:
       mise: https://mise.run

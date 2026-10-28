@@ -1,0 +1,28 @@
+{{ if and (eq .chezmoi.os "linux") (eq .chezmoi.osRelease.id "fedora") .personal .install_guix -}}
+#!/bin/bash
+set -euo pipefail
+
+# Guix is not packaged in Fedora: use the official binary installer (guix.gnu.org/install.sh, the same file as etc/guix-install.sh in the Guix source)
+# (installs /gnu, guix-daemon and its build users; it checks the tarball signature)
+if [ ! -e /etc/systemd/system/guix-daemon.service ]; then
+    echo "Installing Guix..."
+    tmp="$(mktemp -d)"
+    trap 'rm -rf "$tmp"' EXIT
+    curl -fsSL --retry 3 https://guix.gnu.org/install.sh -o "$tmp/guix-install.sh"
+    # The installer wants newlines for its confirmations. Feed them from process
+    # substitution: in a pipe, yes dies of SIGPIPE and pipefail fails the script
+    sudo bash "$tmp/guix-install.sh" < <(yes '')
+else
+    echo "Guix is already installed."
+fi
+
+# SELinux blocks guix-daemon unless the policy shipped with Guix is loaded
+if command -v semodule >/dev/null 2>&1 && [ "$(getenforce)" != "Disabled" ]; then
+    if ! sudo semodule -l | grep -qx guix-daemon; then
+        echo "Loading the Guix SELinux policy..."
+        sudo semodule -i /var/guix/profiles/per-user/root/current-guix/share/selinux/guix-daemon.cil
+        sudo restorecon -R /gnu /var/guix
+        sudo systemctl restart guix-daemon
+    fi
+fi
+{{ end -}}

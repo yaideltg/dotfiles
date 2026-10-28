@@ -1,0 +1,40 @@
+{{ if and (eq .chezmoi.os "linux") (eq .chezmoi.osRelease.id "fedora") .personal .install_docker -}}
+#!/bin/bash
+set -euo pipefail
+
+# Docker daemon setup (packages come from packages.yaml)
+{{- /* Content is defined once so the hash and the written files cannot drift apart */}}
+{{ $daemon := `{"log-driver":"json-file","log-opts":{"max-size":"10m","max-file":"5"}}` -}}
+{{ $dropin := "[Unit]\nDefaultDependencies=no\n" -}}
+# config hash: {{ print $daemon $dropin | sha256sum }}
+
+echo "Configuring Docker..."
+
+changed=0
+
+# Limit container log size to avoid filling the disk
+sudo mkdir -p /etc/docker
+if ! echo {{ $daemon | squote }} | sudo cmp -s - /etc/docker/daemon.json; then
+    echo {{ $daemon | squote }} | sudo tee /etc/docker/daemon.json >/dev/null
+    changed=1
+fi
+
+# Don't let docker hold up boot waiting for network-online.target
+sudo mkdir -p /etc/systemd/system/docker.service.d
+if ! printf '%b' {{ $dropin | quote }} | sudo cmp -s - /etc/systemd/system/docker.service.d/no-block-boot.conf; then
+    printf '%b' {{ $dropin | quote }} | sudo tee /etc/systemd/system/docker.service.d/no-block-boot.conf >/dev/null
+    sudo systemctl daemon-reload
+    changed=1
+fi
+
+sudo systemctl enable --now docker
+if [ "$changed" = 1 ]; then
+    sudo systemctl restart docker
+fi
+
+# Run docker without sudo (takes effect after logging in again)
+if ! id -nG "$USER" | tr ' ' '\n' | grep -qx docker; then
+    sudo usermod -aG docker "$USER"
+    echo "Added $USER to the docker group: log out and back in to use docker without sudo."
+fi
+{{ end -}}

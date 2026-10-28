@@ -4,5 +4,8 @@ cliamp = "latest"
 gh = "latest"
 gitleaks = "latest"
 hugo-extended = "latest"
+{{ if .install_node -}}
+node = "lts"
+{{ end -}}
 uv = "latest"
 yt-dlp = "latest"

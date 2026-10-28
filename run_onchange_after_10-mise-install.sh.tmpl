@@ -3,7 +3,7 @@
 set -euo pipefail
 
 # Rerun whenever the tool list changes
-# mise config hash: {{ include "dot_config/mise/config.toml" | sha256sum }}
+# mise config hash: {{ include "dot_config/mise/config.toml.tmpl" | sha256sum }} {{ .install_node }}
 
 export PATH="$HOME/.local/bin:$PATH"
 

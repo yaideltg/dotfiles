@@ -132,7 +132,7 @@ Then, [[https://protesilaos.com/emacs/fontaine][fontaine]] allows the user to de
             (small
              :default-height 90)
             (regular
-             :default-height 120)
+             :default-height 110)
             (medium
              :default-height 150)
             (large

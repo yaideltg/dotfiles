@@ -10,7 +10,13 @@ echo "Checking for missing system packages..."
 # 1. Handle DNF System Packages
 # Filter out already installed packages to save time
 MISSING_DNF=()
-{{ range .packages.fedora.dnf -}}
+{{ $dnf := .packages.fedora.dnf -}}
+{{ range $tool, $pkgs := .packages.fedora.optional -}}
+{{ if index $ (print "install_" $tool) -}}
+{{ $dnf = concat $dnf $pkgs -}}
+{{ end -}}
+{{ end -}}
+{{ range $dnf -}}
 if ! rpm -q {{ . | quote }} &>/dev/null; then
     MISSING_DNF+=({{ . | quote }})
 fi

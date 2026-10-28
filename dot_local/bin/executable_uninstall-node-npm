@@ -1,0 +1,63 @@
+#!/bin/bash
+set -euo pipefail
+
+MISE_CONFIG="$HOME/.config/mise/config.toml"
+CHEZMOI_CONFIG="$HOME/.config/chezmoi/chezmoi.toml"
+PURGE=0
+
+usage() {
+    cat <<USAGE
+Usage: ${0##*/} [--purge]
+
+Uninstall Node.js and npm that chezmoi set up through mise. Global npm packages
+live inside the mise node install, so they are removed with it. Turns off the
+install_node flag so the next chezmoi apply does not reinstall it. Also removes
+nvm (~/.nvm and its shell lines) if it was ever installed by hand.
+
+Options:
+  --purge     Also delete the npm cache (~/.npm, ~/.cache/node)
+  -h, --help  Show this help
+
+Reinstall with: chezmoi init --prompt && chezmoi apply
+USAGE
+}
+
+[ $# -gt 0 ] || { usage; exit 0; }
+
+for arg in "$@"; do
+    case "$arg" in
+        -h|--help) usage; exit 0 ;;
+        --purge) PURGE=1 ;;
+        *) echo "Unknown argument: $arg" >&2; usage >&2; exit 1 ;;
+    esac
+done
+
+read -r -p "Uninstall Node.js and npm? [y/N] " reply
+[[ "$reply" =~ ^[Yy]$ ]] || { echo "Skipped."; exit 0; }
+
+# run_onchange_ scripts are keyed by the hash of their rendered content. Forget the
+# hash as it renders with node enabled, so enabling it again reruns the script.
+# Must run before the flag is flipped.
+hash="$(chezmoi execute-template < "$(chezmoi source-path)/run_onchange_after_10-mise-install.sh.tmpl" | sha256sum | cut -d' ' -f1)"
+chezmoi state delete --bucket=scriptState --key="$hash" 2>/dev/null || true
+
+if command -v mise >/dev/null 2>&1; then
+    mise uninstall --all node || true
+fi
+# chezmoi rewrites this file without node on the next apply; drop it now so mise does not reinstall it
+sed -i '/^node\s*=/d' "$MISE_CONFIG"
+sed -i 's/^\(\s*install_node\s*=\s*\)true/\1false/' "$CHEZMOI_CONFIG"
+
+if [ "$PURGE" = 1 ]; then
+    rm -rf "$HOME/.npm" "$HOME/.cache/node"
+fi
+
+if [ -d "$HOME/.nvm" ]; then
+    rm -rf "$HOME/.nvm"
+    for rc in "$HOME/.bashrc" "$HOME/.bash_profile" "$HOME/.profile"; do
+        [ -f "$rc" ] && sed -i '/NVM_DIR/d;/nvm\.sh/d;/bash_completion/{/nvm/d}' "$rc"
+    done
+    echo "Removed nvm."
+fi
+
+echo "Removed Node.js and npm. Re-enable with: chezmoi init --prompt && chezmoi apply"

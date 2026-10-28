@@ -1,4 +1,13 @@
-{{- $personal := promptBoolOnce . "personal" "Is this a personal machine" (eq .chezmoi.hostname "personal") -}}
+{{- $personal := promptBoolOnce . "personal" "Is this a personal Fedora machine" (eq .chezmoi.hostname "personal") -}}
+{{- $docker := promptBoolOnce . "install_docker" "Install Docker and Compose" $personal -}}
+{{- $apptainer := promptBoolOnce . "install_apptainer" "Install Apptainer" $personal -}}
+{{- $node := promptBoolOnce . "install_node" "Install Node.js and npm (via mise)" $personal -}}
+{{- $guix := promptBoolOnce . "install_guix" "Install Guix" $personal -}}
+{{- writeToStdout (printf "\nchezmoi settings (change with: chezmoi init --prompt):\n  personal Fedora machine: %v\n  docker:    %v\n  apptainer: %v\n  guix:      %v\n  node/npm:  %v\n\n" $personal $docker $apptainer $guix $node) -}}
 
 [data]
     personal = {{ $personal }}
+    install_docker = {{ $docker }}
+    install_apptainer = {{ $apptainer }}
+    install_guix = {{ $guix }}
+    install_node = {{ $node }}

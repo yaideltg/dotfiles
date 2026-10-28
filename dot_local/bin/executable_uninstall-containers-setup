@@ -1,0 +1,118 @@
+#!/bin/bash
+# Uninstall docker, apptainer and/or guix that chezmoi set up.
+set -euo pipefail
+
+CONFIG="$HOME/.config/chezmoi/chezmoi.toml"
+PURGE=0
+TOOLS=()
+
+usage() {
+    cat <<USAGE
+Usage: ${0##*/} [--purge] docker|apptainer|guix|all ...
+
+Uninstall the container tools set up by chezmoi. Asks for confirmation per tool
+and turns off its install_<tool> flag so the next chezmoi apply does not
+reinstall it.
+
+Tools:
+  docker      Docker engine, Compose, Buildx; its config and docker group membership
+  apptainer   Apptainer
+  guix        Guix daemon user, units, shell and info links and SELinux policy
+  all         All of the above
+
+Options:
+  --purge     Also delete the data: /var/lib/docker, ~/.apptainer,
+              /gnu, /var/guix, /etc/guix and ~/.config/guix (kept by default)
+  -h, --help  Show this help
+
+Reinstall with: chezmoi init --prompt && chezmoi apply
+USAGE
+}
+
+[ $# -gt 0 ] || { usage; exit 0; }
+
+for arg in "$@"; do
+    case "$arg" in
+        -h|--help) usage; exit 0 ;;
+        --purge) PURGE=1 ;;
+        all) TOOLS=(docker apptainer guix) ;;
+        docker|apptainer|guix) TOOLS+=("$arg") ;;
+        *) echo "Unknown argument: $arg" >&2; usage >&2; exit 1 ;;
+    esac
+done
+[ ${#TOOLS[@]} -gt 0 ] || { usage >&2; exit 1; }
+
+confirm() {
+    read -r -p "$1 [y/N] " reply
+    [[ "$reply" =~ ^[Yy]$ ]]
+}
+
+# run_onchange_ scripts are keyed by the hash of their rendered content. Forget the
+# hash of the scripts as they render with the tool enabled, so enabling it again
+# reruns them. Must run before the flag is flipped.
+forget_script_state() {
+    local script hash
+    for script in "$@"; do
+        hash="$(chezmoi execute-template < "$(chezmoi source-path)/$script" | sha256sum | cut -d' ' -f1)"
+        chezmoi state delete --bucket=scriptState --key="$hash" 2>/dev/null || true
+    done
+}
+
+disable_flag() {
+    sed -i "s/^\(\s*install_$1\s*=\s*\)true/\1false/" "$CONFIG"
+}
+
+uninstall_docker() {
+    sudo systemctl disable --now docker.service docker.socket 2>/dev/null || true
+    sudo dnf remove -y moby-engine docker-cli docker-compose docker-buildx
+    sudo rm -f /etc/docker/daemon.json /etc/systemd/system/docker.service.d/no-block-boot.conf
+    sudo rmdir /etc/systemd/system/docker.service.d 2>/dev/null || true
+    sudo systemctl daemon-reload
+    sudo gpasswd -d "$USER" docker 2>/dev/null || true
+    if [ "$PURGE" = 1 ]; then
+        sudo rm -rf /var/lib/docker /var/lib/containerd
+    fi
+}
+
+uninstall_apptainer() {
+    sudo dnf remove -y apptainer
+    if [ "$PURGE" = 1 ]; then
+        rm -rf "$HOME/.apptainer"
+    fi
+}
+
+uninstall_guix() {
+    sudo systemctl disable --now guix-daemon.service gnu-store.mount 2>/dev/null || true
+    sudo rm -f /etc/systemd/system/guix-daemon.service /etc/systemd/system/gnu-store.mount \
+        /etc/profile.d/zzz-guix.sh /usr/local/bin/guix \
+        /etc/bash_completion.d/guix /etc/bash_completion.d/guix-daemon
+    sudo systemctl daemon-reload
+    sudo semodule -r guix-daemon 2>/dev/null || true
+    # The installer links its info files into /usr/local/share/info
+    sudo find /usr/local/share/info -maxdepth 1 -type l -lname '/var/guix/*' -delete 2>/dev/null || true
+    # Unprivileged daemon user (also leaves the kvm group) and its subgid mapping
+    sudo userdel guix-daemon 2>/dev/null || true
+    sudo groupdel guix-daemon 2>/dev/null || true
+    sudo sed -i '/^guix-daemon:/d' /etc/subgid /etc/subuid
+    if [ "$PURGE" = 1 ]; then
+        sudo rm -rf /gnu /var/guix /etc/guix
+        rm -rf "$HOME/.config/guix" "$HOME/.guix-profile" "$HOME/.cache/guix"
+    fi
+}
+
+SCRIPTS_docker="run_onchange_before_50-docker-setup.sh.tmpl"
+SCRIPTS_apptainer=""
+SCRIPTS_guix="run_onchange_before_60-guix-setup.sh.tmpl"
+
+for tool in "${TOOLS[@]}"; do
+    msg="Uninstall $tool"
+    [ "$PURGE" = 1 ] && msg="$msg and DELETE ITS DATA"
+    confirm "$msg?" || { echo "Skipped $tool."; continue; }
+
+    # shellcheck disable=SC2086
+    scripts="SCRIPTS_$tool"
+    forget_script_state run_onchange_before_20-fedora-install-packages.sh.tmpl ${!scripts}
+    "uninstall_$tool"
+    disable_flag "$tool"
+    echo "Removed $tool. Re-enable with: chezmoi init --prompt && chezmoi apply"
+done
