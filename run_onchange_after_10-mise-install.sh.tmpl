@@ -9,4 +9,9 @@ export PATH="$HOME/.local/bin:$PATH"
 
 echo "Installing mise tools..."
 mise install
+{{ if .install_node }}
+# The npm bundled with Node lags behind latest
+echo "Updating npm..."
+mise exec -- npm install -g npm@latest
+{{ end -}}
 {{ end -}}
