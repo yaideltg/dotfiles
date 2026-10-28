@@ -1,6 +1,7 @@
 // Managed by chezmoi: re-applied over prefs.js at every Firefox start
 user_pref("accessibility.typeaheadfind.flashBar", 0);
 user_pref("browser.contentblocking.category", "strict");
+user_pref("browser.formfill.enable", false);
 user_pref("browser.newtabpage.activity-stream.asrouter.userprefs.cfr.addons", false);
 user_pref("browser.newtabpage.activity-stream.asrouter.userprefs.cfr.features", false);
 user_pref("browser.newtabpage.activity-stream.hideLogo", true);
@@ -35,8 +36,14 @@ user_pref("network.http.speculative-parallel-limit", 0);
 user_pref("network.prefetch-next", false);
 user_pref("privacy.annotate_channels.strict_list.enabled", true);
 user_pref("privacy.bounceTrackingProtection.mode", 1);
+user_pref("privacy.clearOnShutdown_v2.cache", true);
+user_pref("privacy.clearOnShutdown_v2.cookiesAndStorage", true);
 user_pref("privacy.clearOnShutdown_v2.formdata", true);
+user_pref("privacy.clearSiteData.browsingHistoryAndDownloads", true);
+user_pref("privacy.clearSiteData.formdata", true);
+user_pref("privacy.clearSiteData.siteSettings", true);
 user_pref("privacy.fingerprintingProtection", true);
+user_pref("privacy.history.custom", true);
 user_pref("privacy.query_stripping.enabled", true);
 user_pref("privacy.query_stripping.enabled.pbmode", true);
 user_pref("privacy.sanitize.sanitizeOnShutdown", true);

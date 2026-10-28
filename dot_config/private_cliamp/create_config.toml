@@ -1,6 +1,6 @@
 theme = ""
 
-shuffle = true
+shuffle = false
 visualizer = "Bars"
 speed = 1.00
 show_metadata = true
