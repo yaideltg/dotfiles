@@ -12,6 +12,9 @@ packages:
       - enchant2-devel
       - hunspell-en-US
       - hunspell-es-ES
+      # Development - Shell
+      - tmux
+      - fzf
     flatpak:
       - com.bitwarden.desktop
       - md.obsidian.Obsidian
