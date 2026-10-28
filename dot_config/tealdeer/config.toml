@@ -1,0 +1,3 @@
+[updates]
+# Download the tldr pages on first use and refresh them periodically
+auto_update = true

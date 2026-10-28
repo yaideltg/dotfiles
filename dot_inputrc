@@ -1,0 +1,12 @@
+# Keep Fedora's defaults (Home/End, Ctrl-arrows...); a user inputrc replaces /etc/inputrc
+$include /etc/inputrc
+
+# Case-insensitive completion: "cd docum<TAB>" completes to Documents/
+set completion-ignore-case on
+# Treat - and _ as the same when completing
+set completion-map-case on
+# List all matches on the first Tab instead of the second
+set show-all-if-ambiguous on
+# Colour the completion list like ls
+set colored-stats on
+set colored-completion-prefix on

@@ -3,7 +3,6 @@ packages:
     dnf:
       - firefox
       - emacs
-      - ripgrep
       - calibre
       - gnucash
       # Jinx (Emacs spell checker) compiles its native module against enchant
@@ -15,6 +14,11 @@ packages:
       # Development - Shell
       - tmux
       - fzf
+      - ripgrep
+      - bat
+      - fd-find
+      - zoxide
+      - tealdeer
     flatpak:
       - com.bitwarden.desktop
       - md.obsidian.Obsidian
