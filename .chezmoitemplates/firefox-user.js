@@ -28,7 +28,7 @@ user_pref("dom.forms.autocomplete.formautofill", true);
 user_pref("dom.security.https_only_mode", true);
 user_pref("extensions.formautofill.addresses.enabled", false);
 user_pref("extensions.formautofill.creditCards.enabled", false);
-user_pref("extensions.unifiedExtensions.button.always_visible", false);
+user_pref("extensions.unifiedExtensions.button.always_visible", true);
 user_pref("intl.accept_languages", "en,es");
 user_pref("network.dns.disablePrefetch", true);
 user_pref("network.http.referer.disallowCrossSiteRelaxingDefault.top_navigation", true);
