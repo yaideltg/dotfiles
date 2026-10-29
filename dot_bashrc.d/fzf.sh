@@ -1,6 +1,7 @@
 # fzf key bindings (Ctrl-T, Ctrl-R, Alt-C); Fedora already enables its completion system-wide
 if command -v fzf >/dev/null 2>&1; then
-    if [ -f /usr/share/fzf/shell/key-bindings.bash ]; then
+    # No readline in dumb terminals (Emacs M-x shell), so `bind` would only warn
+    if [ "$TERM" != dumb ] && [ -f /usr/share/fzf/shell/key-bindings.bash ]; then
         . /usr/share/fzf/shell/key-bindings.bash
     fi
 
