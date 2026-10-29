@@ -15,7 +15,13 @@
         "https://github.com",
         "https://cea.talkspirit.com",
         "https://www.tchap.gouv.fr",
-        "https://auth.agent.education.tchap.gouv.fr"
+        "https://auth.agent.education.tchap.gouv.fr",
+        "https://claude.ai",
+        "https://gricad-gitlab.univ-grenoble-alpes.fr",
+        "https://spotify.com",
+        "https://accounts.spotify.com",
+        "https://open.spotify.com",
+        "https://www.fizzy.do"
       ]
     },
     "ExtensionSettings": {
