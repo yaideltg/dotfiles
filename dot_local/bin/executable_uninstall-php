@@ -1,0 +1,59 @@
+#!/bin/bash
+set -euo pipefail
+
+MISE_CONFIG="$HOME/.config/mise/config.toml"
+CHEZMOI_CONFIG="$HOME/.config/chezmoi/chezmoi.toml"
+PURGE=0
+
+usage() {
+    cat <<USAGE
+Usage: ${0##*/} [--purge]
+
+Uninstall PHP, Composer, the Laravel installer and the Symfony CLI that chezmoi
+set up through mise. Turns off the install_php flag so the next chezmoi apply
+does not reinstall them.
+
+Options:
+  --purge     Also delete Composer's config and cache (~/.config/composer,
+              ~/.cache/composer) and the Symfony CLI data (~/.symfony5)
+  -h, --help  Show this help
+
+Reinstall with: chezmoi init --prompt && chezmoi apply
+USAGE
+}
+
+[ $# -gt 0 ] || { usage; exit 0; }
+
+for arg in "$@"; do
+    case "$arg" in
+        -h|--help) usage; exit 0 ;;
+        --purge) PURGE=1 ;;
+        *) echo "Unknown argument: $arg" >&2; usage >&2; exit 1 ;;
+    esac
+done
+
+read -r -p "Uninstall PHP, Composer, Laravel installer and Symfony CLI? [y/N] " reply
+[[ "$reply" =~ ^[Yy]$ ]] || { echo "Skipped."; exit 0; }
+
+# run_onchange_ scripts are keyed by the hash of their rendered content. Forget the
+# hash as it renders with php enabled, so enabling it again reruns the script.
+# Must run before the flag is flipped.
+hash="$(chezmoi execute-template < "$(chezmoi source-path)/run_onchange_after_10-mise-install.sh.tmpl" | sha256sum | cut -d' ' -f1)"
+chezmoi state delete --bucket=scriptState --key="$hash" 2>/dev/null || true
+
+# Composer globals live in ~/.config/composer; the laravel binary is linked into ~/.local/bin
+rm -f "$HOME/.local/bin/laravel"
+
+if command -v mise >/dev/null 2>&1; then
+    mise uninstall --all php || true
+    mise uninstall --all github:symfony-cli/symfony-cli || true
+fi
+# chezmoi rewrites this file without php on the next apply; drop it now so mise does not reinstall it
+sed -i '/^php\s*=/d;/^"github:symfony-cli\/symfony-cli"\s*=/d;/^\[tool_alias\]/d;/^# Prebuilt static PHP/d' "$MISE_CONFIG"
+sed -i 's/^\(\s*install_php\s*=\s*\)true/\1false/' "$CHEZMOI_CONFIG"
+
+if [ "$PURGE" = 1 ]; then
+    rm -rf "$HOME/.config/composer" "$HOME/.cache/composer" "$HOME/.symfony5"
+fi
+
+echo "Removed PHP and Composer. Re-enable with: chezmoi init --prompt && chezmoi apply"

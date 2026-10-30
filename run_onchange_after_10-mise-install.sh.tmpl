@@ -3,7 +3,7 @@
 set -euo pipefail
 
 # Rerun whenever the tool list changes
-# mise config hash: {{ include "dot_config/mise/config.toml.tmpl" | sha256sum }} {{ .install_node }}
+# mise config hash: {{ include "dot_config/mise/config.toml.tmpl" | sha256sum }} {{ .install_node }} {{ .install_php }}
 
 export PATH="$HOME/.local/bin:$PATH"
 
@@ -13,5 +13,11 @@ mise install
 # The npm bundled with Node lags behind latest
 echo "Updating npm..."
 mise exec -- npm install -g npm@latest
+{{ end -}}
+{{ if .install_php }}
+# Global Composer tools land in ~/.local/bin (already on PATH)
+echo "Setting up Composer..."
+mise exec -- composer global config bin-dir "$HOME/.local/bin"
+mise exec -- composer global require laravel/installer
 {{ end -}}
 {{ end -}}

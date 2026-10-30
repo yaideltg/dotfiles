@@ -7,7 +7,16 @@ hugo-extended = "latest"
 {{ if .install_node -}}
 node = "lts"
 {{ end -}}
+{{ if .install_php -}}
+php = "latest"
+"github:symfony-cli/symfony-cli" = "latest"
+{{ end -}}
 "pipx:eyeD3" = "latest"
 starship = "latest"
 uv = "latest"
 yt-dlp = "latest"
+{{ if .install_php }}
+# Prebuilt static PHP (Composer included) instead of compiling from source
+[tool_alias]
+php = "github:nunomaduro/static-php-builds"
+{{ end -}}
