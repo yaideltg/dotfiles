@@ -21,7 +21,8 @@
         "https://spotify.com",
         "https://accounts.spotify.com",
         "https://open.spotify.com",
-        "https://www.fizzy.do"
+        "https://www.fizzy.do",
+        "https://app.fizzy.do"
       ]
     },
     "ExtensionSettings": {
