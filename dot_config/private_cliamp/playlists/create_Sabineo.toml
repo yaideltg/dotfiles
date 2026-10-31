@@ -38,3 +38,12 @@ artist = "Joaquín Sabina"
 album = "El Simbolo y el Cuate"
 year = 2014
 track_number = 5
+
+[[track]]
+path = "/media/data/music/Joaquín Sabina/[2020] - Contigo/Mas_De_Cien_Mentiras.mp3"
+title = "Mas De Cien Mentiras"
+artist = "Joaquín Sabina"
+album = "Contigo"
+genre = "Genre:"
+year = 2020
+track_number = 9

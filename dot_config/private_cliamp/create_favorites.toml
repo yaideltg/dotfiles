@@ -1,4 +1,45 @@
 [[entry]]
+favorited_at = "2026-10-31T17:43:58Z"
+path = "/media/data/music/RM/[2022] - Indigo/Hectic__with_Colde_.mp3"
+title = "Hectic (with Colde)"
+artist = "RM"
+album = "Indigo"
+genre = "Genre:"
+year = 2022
+track_number = 8
+
+[[entry]]
+favorited_at = "2026-10-31T17:41:26Z"
+path = "/media/data/music/RM/[2022] - Indigo/All_Day__with_Tablo_.mp3"
+title = "All Day (with Tablo)"
+artist = "RM"
+album = "Indigo"
+genre = "Genre:"
+year = 2022
+track_number = 3
+
+[[entry]]
+favorited_at = "2026-10-30T10:14:51Z"
+path = "/media/data/music/Now Thats What I Call 20th Century (2016)/Eye of the Tiger - Survivor.mp3"
+title = "Eye of the Tiger"
+artist = "Survivor"
+album = "Eye Of The Tiger"
+year = 1982
+track_number = 1
+duration_secs = 248
+
+[[entry]]
+favorited_at = "2026-10-30T08:44:35Z"
+path = "/media/data/music/Bon Jovi/Greates hits/Wanted_Dead_Or_Alive.mp3"
+title = "Wanted Dead Or Alive"
+artist = "Bon Jovi"
+album = "Bon Jovi Greatest Hits - The Ultimate Collection (Deluxe)"
+genre = "Genre:"
+year = 2010
+track_number = 5
+duration_secs = 308
+
+[[entry]]
 favorited_at = "2026-10-28T16:09:59Z"
 path = "/media/data/music/Al2 El Aldeano/2025 - Símbolo/Símbolos.mp3"
 title = "Símbolos"
@@ -48,17 +89,6 @@ genre = "Genre:"
 year = 2010
 track_number = 2
 duration_secs = 222
-
-[[entry]]
-favorited_at = "2026-10-28T16:00:11Z"
-path = "/media/data/music/Bon Jovi/Greates hits/Wanted_Dead_Or_Alive.mp3"
-title = "Wanted Dead Or Alive"
-artist = "Bon Jovi"
-album = "Bon Jovi Greatest Hits - The Ultimate Collection (Deluxe)"
-genre = "Genre:"
-year = 2010
-track_number = 5
-duration_secs = 308
 
 [[entry]]
 favorited_at = "2026-10-28T16:00:00Z"
