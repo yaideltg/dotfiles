@@ -1,0 +1,31 @@
+#!/bin/bash
+# Block idle and suspend while cliamp is playing; release when paused or closed.
+set -u
+
+CLIAMP="$HOME/.local/share/mise/shims/cliamp"
+INTERVAL=15
+holder=
+
+release() {
+    if [[ -n $holder ]]; then
+        kill "$holder" 2>/dev/null || true
+        wait "$holder" 2>/dev/null || true
+        holder=
+    fi
+}
+trap 'release; exit 0' INT TERM
+trap release EXIT
+
+while true; do
+    if "$CLIAMP" status 2>/dev/null | grep -q '^State: playing'; then
+        if [[ -z $holder ]] || ! kill -0 "$holder" 2>/dev/null; then
+            systemd-inhibit --what=idle:sleep --who=cliamp --why="Playing music" \
+                sleep infinity &
+            holder=$!
+        fi
+    else
+        release
+    fi
+    sleep "$INTERVAL" &
+    wait $!
+done

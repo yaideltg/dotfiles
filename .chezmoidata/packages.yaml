@@ -6,6 +6,8 @@ packages:
       - calibre
       - gnucash
       - mpv
+      # cliamp decodes streams and converts downloads to mp3 through it
+      - ffmpeg-free
       # Jinx (Emacs spell checker) compiles its native module against enchant
       - gcc
       - pkgconf-pkg-config

@@ -1,0 +1,9 @@
+[Unit]
+Description=Keep the system awake while cliamp plays
+
+[Service]
+ExecStart=%h/.local/bin/cliamp-awake
+Restart=on-failure
+
+[Install]
+WantedBy=default.target

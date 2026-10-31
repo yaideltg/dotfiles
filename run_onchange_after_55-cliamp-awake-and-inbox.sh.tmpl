@@ -1,0 +1,17 @@
+{{ if and (eq .chezmoi.os "linux") (eq .chezmoi.osRelease.id "fedora") .personal -}}
+#!/bin/bash
+set -euo pipefail
+
+# Rerun whenever the unit files or their scripts change
+# awake service hash: {{ include "dot_config/systemd/user/cliamp-awake.service" | sha256sum }}
+# inbox service hash: {{ include "dot_config/systemd/user/cliamp-inbox-mp3.service" | sha256sum }}
+# inbox path hash: {{ include "dot_config/systemd/user/cliamp-inbox-mp3.path" | sha256sum }}
+# awake script hash: {{ include "dot_local/bin/executable_cliamp-awake" | sha256sum }}
+
+echo "Enabling cliamp sleep inhibitor and inbox converter..."
+systemctl --user daemon-reload
+systemctl --user enable --now cliamp-awake.service
+systemctl --user enable --now cliamp-inbox-mp3.path
+# Restart so a changed script takes effect
+systemctl --user restart cliamp-awake.service
+{{ end -}}

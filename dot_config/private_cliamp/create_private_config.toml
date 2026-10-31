@@ -4,3 +4,9 @@ shuffle = false
 visualizer = "Bars"
 speed = 1.00
 show_metadata = true
+
+[ytmusic]
+cookies_from = "firefox"
+
+[downloads]
+directory = "/media/data/music/inbox"

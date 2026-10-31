@@ -1,0 +1,22 @@
+#!/bin/bash
+# Convert audio that cliamp downloaded (Ctrl+S) into mp3, keeping tags.
+set -euo pipefail
+
+INBOX="${1:-/media/data/music/inbox}"
+[[ -d $INBOX ]] || exit 0
+
+shopt -s nullglob nocaseglob
+for f in "$INBOX"/*.{m4a,opus,webm,ogg,flac,wav,aac}; do
+    # Skip files yt-dlp may still be writing
+    [[ -n $(find "$f" -mmin -0.2 -print) ]] && continue
+    [[ -e $f.part || -e $f.ytdl ]] && continue
+    out="${f%.*}.mp3"
+    [[ -e $out ]] && continue
+    if ffmpeg -nostdin -loglevel error -i "$f" -vn -map_metadata 0 \
+        -codec:a libmp3lame -q:a 0 "$out.tmp.mp3"; then
+        mv "$out.tmp.mp3" "$out"
+        rm -- "$f"
+    else
+        rm -f -- "$out.tmp.mp3"
+    fi
+done

@@ -1,0 +1,7 @@
+[Unit]
+Description=Convert cliamp downloads to mp3
+ConditionPathIsDirectory=/media/data/music/inbox
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/bin/cliamp-inbox-mp3

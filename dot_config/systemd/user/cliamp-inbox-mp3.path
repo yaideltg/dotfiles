@@ -1,0 +1,8 @@
+[Unit]
+Description=Watch the cliamp download inbox
+
+[Path]
+PathChanged=/media/data/music/inbox
+
+[Install]
+WantedBy=default.target
