@@ -5,18 +5,29 @@ set -euo pipefail
 INBOX="${1:-/media/data/music/inbox}"
 [[ -d $INBOX ]] || exit 0
 
+# Writing into the inbox retriggers the path unit; let a single run do the work
+exec 9>"${XDG_RUNTIME_DIR:-/tmp}/cliamp-inbox-mp3.lock"
+flock -n 9 || exit 0
+
 shopt -s nullglob nocaseglob
-for f in "$INBOX"/*.{m4a,opus,webm,ogg,flac,wav,aac}; do
-    # Skip files yt-dlp may still be writing
-    [[ -n $(find "$f" -mmin -0.2 -print) ]] && continue
-    [[ -e $f.part || -e $f.ytdl ]] && continue
-    out="${f%.*}.mp3"
-    [[ -e $out ]] && continue
-    if ffmpeg -nostdin -loglevel error -i "$f" -vn -map_metadata 0 \
-        -codec:a libmp3lame -q:a 0 "$out.tmp.mp3"; then
-        mv "$out.tmp.mp3" "$out"
-        rm -- "$f"
-    else
-        rm -f -- "$out.tmp.mp3"
-    fi
+while true; do
+    pending=
+    for f in "$INBOX"/*.{m4a,opus,webm,ogg,flac,wav,aac}; do
+        # Skip files yt-dlp may still be writing, and look again afterwards
+        if [[ -n $(find "$f" -mmin -0.2 -print) || -e $f.part || -e $f.ytdl ]]; then
+            pending=1
+            continue
+        fi
+        out="${f%.*}.mp3"
+        [[ -e $out ]] && continue
+        if ffmpeg -nostdin -loglevel error -i "$f" -vn -map_metadata 0 \
+            -codec:a libmp3lame -q:a 0 "$out.tmp.mp3"; then
+            mv "$out.tmp.mp3" "$out"
+            rm -- "$f"
+        else
+            rm -f -- "$out.tmp.mp3"
+        fi
+    done
+    [[ -n $pending ]] || break
+    sleep 5
 done
