@@ -1,0 +1,4 @@
+{{ if .install_node -}}
+# YouTube needs a JS runtime to solve signature challenges; only deno is enabled by default
+--js-runtimes node
+{{ end -}}
