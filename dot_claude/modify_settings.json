@@ -5,4 +5,9 @@
 {{- if $current -}}
 {{-   $settings = fromJson $current -}}
 {{- end -}}
+{{- /* Already set: keep the file byte for byte, so Claude Code's key order doesn't show up as a diff */ -}}
+{{- if and $current (eq (dig "env" "DISABLE_AUTOUPDATER" "" $settings) "1") -}}
+{{ .chezmoi.stdin }}
+{{- else -}}
 {{ setValueAtPath "env.DISABLE_AUTOUPDATER" "1" $settings | toPrettyJson "  " }}
+{{- end -}}
