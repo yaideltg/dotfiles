@@ -1,4 +1,5 @@
 // Managed by chezmoi: re-applied over prefs.js at every Firefox start
+// Pinned new-tab shortcuts live in firefox-policies.json as defaults, so changes made in Firefox stick
 user_pref("accessibility.typeaheadfind.flashBar", 0);
 user_pref("browser.contentblocking.category", "strict");
 user_pref("browser.formfill.enable", false);
@@ -12,7 +13,6 @@ user_pref("browser.newtabpage.activity-stream.showSponsoredTopSites", false);
 user_pref("browser.newtabpage.activity-stream.system.showWeatherOptIn", false);
 user_pref("browser.newtabpage.activity-stream.widgets.enabled", false);
 user_pref("browser.newtabpage.activity-stream.widgets.weather.enabled", false);
-user_pref("browser.newtabpage.pinned", "[{\"url\":\"https://mail.proton.me\",\"label\":\"ProtonMail\",\"baseDomain\":\"mail.proton.me\"},{\"url\":\"https://app.tuta.com/login\",\"label\":\"TutaNota\",\"baseDomain\":\"app.tuta.com\"},{\"url\":\"https://github.com/yaideltg\",\"label\":\"GitHub\",\"baseDomain\":\"github.com\"},{\"url\":\"https://www.youtube.com/\",\"label\":\"YouTube\"}]");
 user_pref("browser.search.suggest.enabled", false);
 user_pref("browser.startup.homepage", "about:home");
 user_pref("browser.tabs.inTitlebar", 1);
@@ -30,6 +30,7 @@ user_pref("extensions.formautofill.addresses.enabled", false);
 user_pref("extensions.formautofill.creditCards.enabled", false);
 user_pref("extensions.unifiedExtensions.button.always_visible", true);
 user_pref("intl.accept_languages", "en,es");
+user_pref("media.eme.enabled", true);
 user_pref("network.dns.disablePrefetch", true);
 user_pref("network.http.referer.disallowCrossSiteRelaxingDefault.top_navigation", true);
 user_pref("network.http.speculative-parallel-limit", 0);

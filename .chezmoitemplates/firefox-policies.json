@@ -1,10 +1,15 @@
 {
   "policies": {
     "SearchEngines": { "Default": "DuckDuckGo" },
+    "Preferences": {
+      "browser.newtabpage.pinned": { "Value": "[{\"url\":\"https://mail.proton.me\",\"label\":\"ProtonMail\",\"baseDomain\":\"mail.proton.me\"},{\"url\":\"https://app.tuta.com/login\",\"label\":\"TutaNota\",\"baseDomain\":\"app.tuta.com\"},{\"url\":\"https://github.com/yaideltg\",\"label\":\"GitHub\",\"baseDomain\":\"github.com\"},{\"url\":\"https://www.youtube.com/\",\"label\":\"YouTube\",\"baseDomain\":\"youtube.com\"},{\"url\":\"https://app.fizzy.do/\",\"label\":\"Fizzy\"}]", "Status": "default" },
+      "browser.newtabpage.blocked": { "Value": "{\"eV8/WsSLxHadrTL1gAxhug==\":1,\"QSdQrU6w/DXzjR/8lOKeoQ==\":1,\"gLv0ja2RYVgxKdp0I5qwvA==\":1}", "Status": "default" }
+    },
     "SanitizeOnShutdown": {
       "Locked": false,
       "Exceptions": [
         "https://tuta.com",
+        "https://app.tuta.com",
         "https://proton.me",
         "https://mail.proton.me",
         "https://account.proton.me",
