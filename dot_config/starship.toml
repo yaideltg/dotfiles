@@ -1,6 +1,6 @@
 add_newline = true
 command_timeout = 200
-format = "[$guix_shell$directory$git_branch$git_status]($style)$character"
+format = "[$guix_shell$python$directory$git_branch$git_status]($style)$character"
 
 [character]
 error_symbol = "[✗](bold cyan)"
@@ -30,6 +30,10 @@ stashed = ""
 staged = ""
 renamed = ""
 deleted = ""
+
+[python]
+format = "[(\\($virtualenv\\) )]($style)"
+style = "italic cyan"
 
 [guix_shell]
 format = "[env]($style) "
