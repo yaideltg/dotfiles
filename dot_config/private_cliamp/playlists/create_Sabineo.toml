@@ -47,3 +47,11 @@ album = "Contigo"
 genre = "Genre:"
 year = 2020
 track_number = 9
+
+[[track]]
+path = "/media/data/music/Leiva/2021 - Cuando Te Muerdes el Labio/Stranger Things.mp3"
+title = "Stranger Things"
+artist = "Leiva"
+album = "Cuando Te Muerdes el Labio"
+year = 2021
+track_number = 5

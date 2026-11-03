@@ -1,4 +1,111 @@
 [[entry]]
+favorited_at = "2026-11-02T09:36:36Z"
+path = "/media/data/music/Leiva/2021 - Cuando Te Muerdes el Labio/Stranger Things.mp3"
+title = "Stranger Things"
+artist = "Leiva"
+album = "Cuando Te Muerdes el Labio"
+year = 2021
+track_number = 5
+
+[[entry]]
+favorited_at = "2026-11-02T09:29:22Z"
+path = "/media/data/music/Joaquín Sabina/[1996] - Yo mi me contigo/Tan_Joven_y_Tan_Viejo.mp3"
+title = "Tan Joven y Tan Viejo"
+artist = "Joaquín Sabina"
+album = "Yo, Mi, Me, Contigo"
+genre = "Genre:"
+track_number = 13
+
+[[entry]]
+favorited_at = "2026-11-01T17:47:03Z"
+path = "/media/data/music/BigFlo et Oli/2022 - Les autres c’est nous/Tant pis ou tant mieux.mp3"
+title = "Tant pis ou tant mieux"
+artist = "Bigflo et Oli"
+album = "Les autres c’est nous"
+year = 1970
+track_number = 5
+duration_secs = 212
+
+[[entry]]
+favorited_at = "2026-11-01T17:46:22Z"
+path = "/media/data/music/BigFlo et Oli/2022 - Les autres c’est nous/La familia.mp3"
+title = "La familia"
+artist = "Bigflo et Oli"
+album = "Les autres c’est nous"
+year = 1970
+track_number = 17
+duration_secs = 227
+
+[[entry]]
+favorited_at = "2026-11-01T17:45:52Z"
+path = "/media/data/music/BigFlo et Oli/2018 - La vie de rêve/Sur la lune.mp3"
+title = "Sur la lune"
+artist = "Bigflo et Oli"
+album = "La vie de rêve"
+year = 2018
+track_number = 11
+duration_secs = 232
+
+[[entry]]
+favorited_at = "2026-11-01T16:45:15Z"
+path = "/media/data/music/BigFlo et Oli/2022 - Les autres c’est nous/J'étais pas là.mp3"
+title = "J'étais pas là"
+artist = "Bigflo et Oli"
+album = "Les autres c’est nous"
+year = 1970
+track_number = 2
+duration_secs = 232
+
+[[entry]]
+favorited_at = "2026-10-31T18:05:30Z"
+path = "/media/data/music/Carlos Varela/[2000] - Nubes/Nubes.mp3"
+title = "Nubes"
+artist = "Carlos Varela"
+album = "Nubes"
+genre = "Genre:"
+track_number = 5
+duration_secs = 254
+
+[[entry]]
+favorited_at = "2026-10-31T18:04:34Z"
+path = "/media/data/music/Carlos Varela/[2019] - El Grito Mudo/Emigrantes.mp3"
+title = "Emigrantes"
+artist = "Carlos Varela"
+album = "El Grito Mudo"
+genre = "Genre:"
+track_number = 5
+
+[[entry]]
+favorited_at = "2026-10-31T17:53:44Z"
+path = "/media/data/music/RM/[2022] - Indigo/Still_Life__with_Anderson__Paak_.mp3"
+title = "Still Life (with Anderson .Paak)"
+artist = "RM"
+album = "Indigo"
+genre = "Genre:"
+year = 2022
+track_number = 2
+
+[[entry]]
+favorited_at = "2026-10-31T17:53:44Z"
+path = "/media/data/music/RM/[2022] - Indigo/Wild_Flower__with_youjeen_.mp3"
+title = "Wild Flower (with youjeen)"
+artist = "RM"
+album = "Indigo"
+genre = "Genre:"
+year = 2022
+track_number = 9
+
+[[entry]]
+favorited_at = "2026-10-31T17:53:40Z"
+path = "/media/data/music/RM/[2022] - Indigo/Lonely.mp3"
+title = "Lonely"
+artist = "RM"
+album = "Indigo"
+genre = "Genre:"
+year = 2022
+track_number = 7
+
+[[entry]]
 favorited_at = "2026-10-31T17:43:58Z"
 path = "/media/data/music/RM/[2022] - Indigo/Hectic__with_Colde_.mp3"
 title = "Hectic (with Colde)"
