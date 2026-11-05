@@ -17,7 +17,7 @@ MISSING_DNF=()
 {{ end -}}
 {{ end -}}
 {{ range $dnf -}}
-if ! rpm -q {{ . | quote }} &>/dev/null; then
+if ! rpm -q --whatprovides {{ . | quote }} &>/dev/null; then
     MISSING_DNF+=({{ . | quote }})
 fi
 {{ end -}}

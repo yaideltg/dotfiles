@@ -14,6 +14,19 @@ packages:
       - enchant2-devel
       - hunspell-en-US
       - hunspell-es-ES
+      # LaTeX (basic TeX Live scheme)
+      - texlive-scheme-basic
+      # Flycheck LaTeX linters (tex-chktex is tried first, tex-lacheck as fallback)
+      - texlive-chktex
+      - texlive-lacheck
+      # LaTeX packages by the TeX file they provide
+      - tex(booktabs.sty)
+      - tex(tikzfill.image.sty)
+      - tex(listings.sty)
+      - tex(tcolorbox.sty)
+      - tex(listingsutf8.sty)
+      - tex(capt-of.sty)
+      - tex(titlesec.sty)
       # Development - Shell
       - tmux
       - fzf

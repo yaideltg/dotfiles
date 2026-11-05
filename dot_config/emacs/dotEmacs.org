@@ -769,11 +769,13 @@ system); on first load it compiles a small native module.
 
     ;; Enable synctex correlation. From Okular just press
     ;; Shift + Left click to go to the good line.
-    ;; From Evince just press Ctrl+Shift+Left click to go to the good line.
+    ;; From Papers (successor of Evince) press Ctrl + Left click.
     (setq TeX-source-correlate-mode t
           TeX-source-correlate-start-server t)
 
-    (setf (alist-get 'output-pdf TeX-view-program-selection) '("Evince"))
+    ;; Evince was replaced by GNOME Papers, which AUCTeX doesn't know about.
+    (add-to-list 'TeX-view-program-list '("Papers" "papers %o"))
+    (setf (alist-get 'output-pdf TeX-view-program-selection) '("Papers"))
     )
 #+END_SRC
 * YAML
