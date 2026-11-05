@@ -49,7 +49,27 @@ if command -v flatpak &>/dev/null; then
     fi
 fi
 
-# 3. Handle curl/script installed packages
+# 3. Handle RPMs published on GitHub releases (not in Fedora repos)
+{{ range $name, $repo := .packages.fedora.github_rpm -}}
+if ! rpm -q {{ $name | quote }} &>/dev/null; then
+    echo "Installing {{ $name }} from GitHub releases..."
+    tmpdir=$(mktemp -d)
+    urls=$(curl -fsSL "https://api.github.com/repos/{{ $repo }}/releases/latest" \
+        | grep -oE '"browser_download_url": *"[^"]*{{ $name }}-[0-9][^"]*-Fedora-[0-9]+-x86_64\.rpm"' \
+        | cut -d'"' -f4)
+    url=$(grep -- "-Fedora-$(rpm -E %fedora)-x86_64.rpm" <<<"$urls" || true)
+    [ -n "$url" ] || url=$(sort -V <<<"$urls" | tail -n1)
+    if [ -n "$url" ]; then
+        curl -fsSL -o "$tmpdir/{{ $name }}.rpm" "$url"
+        sudo dnf install -y "$tmpdir/{{ $name }}.rpm"
+    else
+        echo "No Fedora RPM found for {{ $name }}; skipping." >&2
+    fi
+    rm -rf "$tmpdir"
+fi
+{{ end -}}
+
+# 4. Handle curl/script installed packages
 echo "Checking for missing curl script packages..."
 {{ range $binary, $url := .packages.fedora.curl -}}
 if ! command -v {{ $binary | quote }} &>/dev/null; then

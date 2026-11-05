@@ -1,3 +1,5 @@
 [user]
 	name = yaideltg
 	email = 129857222+yaideltg@users.noreply.github.com
+[safe]
+	directory = *

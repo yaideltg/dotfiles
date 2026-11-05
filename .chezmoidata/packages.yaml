@@ -36,6 +36,11 @@ packages:
       - com.bitwarden.desktop
       - md.obsidian.Obsidian
       - org.signal.Signal
+    # rpm: not in Fedora repos; latest GitHub release asset named
+    # <name>-<version>-Fedora-<release>-x86_64.rpm (falls back to the newest Fedora build published).
+    # Installed once; update by removing the package and re-running apply.
+    github_rpm:
+      veracrypt: VeraCrypt/VeraCrypt
     # binary: install script URL (other CLI tools go in dot_config/mise/config.toml)
     curl:
       mise: https://mise.run
