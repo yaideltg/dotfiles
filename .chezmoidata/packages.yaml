@@ -6,6 +6,8 @@ packages:
       - calibre
       - gnucash
       - mpv
+      # Font for Emacs
+      - jetbrains-mono-fonts
       # cliamp decodes streams and converts downloads to mp3 through it
       - ffmpeg-free
       # Jinx (Emacs spell checker) compiles its native module against enchant

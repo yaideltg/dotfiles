@@ -3,6 +3,11 @@
 ;; Never let Custom write to a file: all configuration lives in dotEmacs.org,
 ;; so anything set through the Customize UI is discarded instead of lingering.
 (setq custom-file null-device)
+;; Saving still tries to write that file and fails ("not a regular file:
+;; /dev/null"). package.el saves `package-selected-packages' right after
+;; installing a package, so the first daemon start after adding a package
+;; exits with an error. Make saving a no-op: values still apply for the session.
+(advice-add 'custom-save-all :override #'ignore)
 
 (require 'package)
 ;; Add MELPA to the packages list

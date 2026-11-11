@@ -149,8 +149,10 @@ Then, [[https://protesilaos.com/emacs/fontaine][fontaine]] allows the user to de
              :bold-weight extrabold)
             (t
              ;; See the fontaine manual: <https://protesilaos.com/emacs/fontaine>.
+             :default-family "JetBrains Mono"
              :default-weight regular
              :default-height 100
+             :fixed-pitch-family "JetBrains Mono"
              :fixed-pitch-height 1.0
              :fixed-pitch-serif-height 1.0
              :variable-pitch-height 1.0
@@ -276,26 +278,60 @@ Set =C-c e= to edit this file, and =C-c r= to reload it:
 
 * Work-spaces
 
-Workspaces are handled with the built-in =tab-bar-mode= (=C-x t= prefix: =C-x t 2= new tab, =C-x t o= next,
-=C-x t r= rename, =C-x t 0= close). The bar only shows when there is more than one tab. =tab-bar-history-mode=
-gives every tab its own window-configuration history (=tab-bar-history-back= / =tab-bar-history-forward=).
+Workspaces are handled with [[https://github.com/nex3/perspective-el][perspective]]: each perspective keeps its own buffer list and window layout, so
+=C-x b= (=consult-buffer=) and =C-x C-b= (=persp-ibuffer=) only show the buffers of the current one. Press
+=b SPC= in =consult-buffer= to see every buffer. The commands live under =C-c M-p= (=C-x x=, the old default,
+holds built-in buffer commands since Emacs 28): =s= switch or create, =n= / =p= next and previous, =r= rename,
+=a= add a buffer, =k= remove a buffer, =c= kill the perspective, =C-s= / =C-l= save and load the state.
 
-I used [[https://github.com/nex3/perspective-el][perspective]] before. Unlike it, tabs do not isolate buffers per workspace, and the state is not saved
-between sessions. =desktop-save-mode= can restore tabs, but it is commented out because Emacs runs as a
-daemon.
+The state goes to =perspective-state= in =user-emacs-directory=, restored in the first graphical frame of the daemon.
+It is saved every ten minutes, when the last graphical frame closes and when Emacs exits. Only graphical frames are
+saved: the daemon's invisible initial frame would otherwise come back as an extra empty frame, and at logout the
+frames are gone before the daemon gets =SIGTERM=, which is why the timer is there.
 
 #+begin_src emacs-lisp
-  (use-package tab-bar
-    :ensure nil
+  (use-package perspective
     :custom
-    (tab-bar-show 1)
+    (persp-mode-prefix-key (kbd "C-c M-p"))
+    (persp-state-default-file (locate-user-emacs-file "perspective-state"))
+    :bind ([remap list-buffers] . persp-ibuffer)
+    :init
+    (persp-mode)
     :config
-    (tab-bar-mode 1)
-    (tab-bar-history-mode 1))
+    (defun my/persp-graphic-frames (&optional except)
+      "Graphical frames other than EXCEPT."
+      (cl-remove-if-not (lambda (f) (and (display-graphic-p f) (not (eq f except))))
+                        (frame-list)))
 
-  (global-set-key [remap list-buffers] #'ibuffer)
+    (defun my/persp-state-save ()
+      "Save the perspectives of the graphical frames, if there is any."
+      (when-let* ((persp-mode)
+                  (frame (car (my/persp-graphic-frames))))
+        (let* ((hidden (cl-remove-if #'display-graphic-p (frame-list)))
+               (hashes (mapcar (lambda (f) (frame-parameter f 'persp--hash)) hidden)))
+          (unwind-protect
+            (progn
+              (dolist (f hidden) (set-frame-parameter f 'persp--hash nil))
+              (with-selected-frame frame (persp-state-save)))
+            (cl-mapc (lambda (f h) (set-frame-parameter f 'persp--hash h)) hidden hashes)))))
 
-  ;; (desktop-save-mode 1)
+    (defun my/persp-save-on-last-frame (frame)
+      "Save the state when FRAME is the last graphical frame."
+      (when (and (display-graphic-p frame) (null (my/persp-graphic-frames frame)))
+        (my/persp-state-save)))
+
+    (defun my/persp-restore-once ()
+      "Restore the saved perspectives in the first graphical frame."
+      (when (display-graphic-p)
+        (remove-hook 'server-after-make-frame-hook #'my/persp-restore-once)
+        (remove-hook 'emacs-startup-hook #'my/persp-restore-once)
+        (when (file-exists-p persp-state-default-file)
+          (persp-state-load persp-state-default-file))))
+
+    (add-hook (if (daemonp) 'server-after-make-frame-hook 'emacs-startup-hook) #'my/persp-restore-once)
+    (add-hook 'delete-frame-functions #'my/persp-save-on-last-frame)
+    (add-hook 'kill-emacs-hook #'my/persp-state-save)
+    (run-with-timer 600 600 #'my/persp-state-save))
 #+end_src
 
 * Windows management
@@ -415,7 +451,11 @@ automatically. It needs =rg= installed in the system.
 
     :config
     ;; Use Projectile to find the project root for consult-ripgrep and friends.
-    (setq consult-project-function (lambda (_) (projectile-project-root))))
+    (setq consult-project-function (lambda (_) (projectile-project-root)))
+
+    ;; List only the buffers of the current perspective; `b SPC' still shows all of them.
+    (consult-customize consult-source-buffer :hidden t :default nil)
+    (add-to-list 'consult-buffer-sources 'persp-consult-source))
 #+end_src
 ** Marginalia configuration
 #+begin_src emacs-lisp

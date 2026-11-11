@@ -2,7 +2,7 @@
   "policies": {
     "SearchEngines": { "Default": "DuckDuckGo" },
     "Preferences": {
-      "browser.newtabpage.pinned": { "Value": "[{\"url\":\"https://mail.proton.me\",\"label\":\"ProtonMail\",\"baseDomain\":\"mail.proton.me\"},{\"url\":\"https://app.tuta.com/login\",\"label\":\"TutaNota\",\"baseDomain\":\"app.tuta.com\"},{\"url\":\"https://github.com/yaideltg\",\"label\":\"GitHub\",\"baseDomain\":\"github.com\"},{\"url\":\"https://www.youtube.com/\",\"label\":\"YouTube\",\"baseDomain\":\"youtube.com\"},{\"url\":\"https://app.fizzy.do/\",\"label\":\"Fizzy\"}]", "Status": "default" },
+      "browser.newtabpage.pinned": { "Value": "[{\"url\":\"https://mail.proton.me\",\"label\":\"ProtonMail\",\"baseDomain\":\"mail.proton.me\"},{\"url\":\"https://app.tuta.com/login\",\"label\":\"TutaNota\",\"baseDomain\":\"app.tuta.com\"},{\"url\":\"https://github.com/yaideltg\",\"label\":\"GitHub\",\"baseDomain\":\"github.com\"},{\"url\":\"https://www.youtube.com/\",\"label\":\"YouTube\",\"baseDomain\":\"youtube.com\"},{\"url\":\"https://app.fizzy.do/\",\"label\":\"Fizzy\",\"baseDomain\":\"app.fizzy.do\"},{\"url\":\"https://notebook.google.com\",\"label\":\"NotebookLM\",\"baseDomain\":\"notebook.google.com\"},{\"url\":\"https://claude.ai/\",\"label\":\"Claude\"}]", "Status": "default" },
       "browser.newtabpage.blocked": { "Value": "{\"eV8/WsSLxHadrTL1gAxhug==\":1,\"QSdQrU6w/DXzjR/8lOKeoQ==\":1,\"gLv0ja2RYVgxKdp0I5qwvA==\":1}", "Status": "default" }
     },
     "SanitizeOnShutdown": {
