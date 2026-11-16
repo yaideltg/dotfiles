@@ -6,6 +6,7 @@ gitleaks = "latest"
 hugo-extended = "latest"
 {{ if .install_node -}}
 node = "lts"
+"npm:markdownlint-cli" = "latest"
 {{ end -}}
 {{ if .install_php -}}
 php = "latest"

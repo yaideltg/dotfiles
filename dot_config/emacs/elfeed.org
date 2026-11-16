@@ -1,3 +1,5 @@
 * News                                                      :elfeed:news:
 ** Tech                                                              :tech:
 *** [[https://omarchy.org/news/rss.xml][Omarchy]]
+** Data Science
+*** [[https://www.counting-stuff.com/rss][Counting Stuff]]

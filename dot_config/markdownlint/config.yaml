@@ -1,0 +1,8 @@
+# markdownlint rules (used by Emacs flycheck)
+default: true
+# Line length: Emacs wraps with visual-line-mode
+MD013: false
+# Inline HTML is fine
+MD033: false
+# Hugo posts start with front matter, not an H1
+MD041: false

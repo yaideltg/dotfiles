@@ -1284,10 +1284,13 @@ if several exist, choose one; otherwise create it with the =journal= keyword.
 
 * Markdown mode
 
+Linting goes through flycheck with =markdownlint= (installed by mise); the rules live in =~/.config/markdownlint/config.yaml=.
+
 #+begin_src emacs-lisp
   (use-package markdown-mode
     :mode ("README\\.md\\'" . gfm-mode)
-    :init (setq markdown-command "multimarkdown")
+    :init (setq markdown-command "multimarkdown"
+                flycheck-markdown-markdownlint-cli-config "~/.config/markdownlint/config.yaml")
     :hook
     (markdown-mode . visual-line-mode)
     )
