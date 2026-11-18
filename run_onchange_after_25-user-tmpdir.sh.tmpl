@@ -1,0 +1,11 @@
+{{ if eq .chezmoi.os "linux" -}}
+#!/bin/bash
+set -euo pipefail
+
+# Rerun whenever the rule changes
+# tmpfiles hash: {{ include "dot_config/user-tmpfiles.d/tmpdir.conf" | sha256sum }}
+
+# Create the on-disk TMPDIR now instead of waiting for the next login
+echo "Creating user TMPDIR..."
+systemd-tmpfiles --user --create
+{{ end -}}

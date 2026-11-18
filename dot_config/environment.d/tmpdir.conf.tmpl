@@ -1,0 +1,6 @@
+# Keep temp files on disk: /tmp is a RAM-backed tmpfs and swap is zram,
+# so large builds there (Claude Code scratchpads especially) eat memory.
+# Cleaned by ~/.config/user-tmpfiles.d/tmpdir.conf
+TMPDIR={{ .chezmoi.homeDir }}/.cache/tmp
+# Claude Code ignores TMPDIR for its own per-session dirs
+CLAUDE_CODE_TMPDIR={{ .chezmoi.homeDir }}/.cache/tmp
