@@ -1,13 +1,28 @@
 {{- /* chezmoi:modify-template */ -}}
-{{- /* Merge into whatever is there; on a fresh machine the file (and ~/.claude) won't exist yet */ -}}
-{{- $settings := dict -}}
-{{- $current := trim .chezmoi.stdin -}}
-{{- if $current -}}
-{{-   $settings = fromJson $current -}}
+{{- /* Set the keys listed in .chezmoidata/claude.yaml, keep everything else. On a fresh machine the file (and ~/.claude) won't exist yet */ -}}
+{{- $current := dict -}}
+{{- $raw := trim .chezmoi.stdin -}}
+{{- if $raw -}}
+{{-   $current = fromJson $raw -}}
 {{- end -}}
-{{- /* Already set: keep the file byte for byte, so Claude Code's key order doesn't show up as a diff */ -}}
-{{- if and $current (eq (dig "env" "DISABLE_AUTOUPDATER" "" $settings) "1") -}}
+{{- $merged := deepCopy $current -}}
+{{- range $key, $value := .claude.settings -}}
+{{-   if eq $key "env" -}}
+{{-     $env := dict -}}
+{{-     if hasKey $merged "env" -}}
+{{-       $env = get $merged "env" -}}
+{{-     end -}}
+{{-     range $name, $val := $value -}}
+{{-       $_ := set $env $name $val -}}
+{{-     end -}}
+{{-     $_ := set $merged "env" $env -}}
+{{-   else -}}
+{{-     $_ := set $merged $key $value -}}
+{{-   end -}}
+{{- end -}}
+{{- /* Already as wanted: keep the file byte for byte, so Claude Code's key order doesn't show up as a diff */ -}}
+{{- if and $raw (eq (toJson $merged) (toJson $current)) -}}
 {{ .chezmoi.stdin }}
 {{- else -}}
-{{ setValueAtPath "env.DISABLE_AUTOUPDATER" "1" $settings | toPrettyJson "  " }}
+{{ toPrettyJson "  " $merged }}
 {{- end -}}
