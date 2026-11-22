@@ -1,0 +1,25 @@
+{{ if and (eq .chezmoi.os "linux") (eq .chezmoi.osRelease.id "fedora") .personal -}}
+#!/bin/bash
+set -euo pipefail
+
+# Enable RPM Fusion (free) and swap in its full codec builds, before the
+# package install step so it finds the RPM Fusion packages it lists.
+
+if ! rpm -q rpmfusion-free-release &>/dev/null; then
+    echo "Enabling RPM Fusion (free)..."
+    sudo dnf install -y \
+        "https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm"
+fi
+
+{{ range $from, $to := .packages.fedora.rpmfusion.swap -}}
+if ! rpm -q {{ $to | quote }} &>/dev/null; then
+    if rpm -q {{ $from | quote }} &>/dev/null; then
+        echo "Swapping {{ $from }} for {{ $to }}..."
+        sudo dnf swap -y --allowerasing {{ $from | quote }} {{ $to | quote }}
+    else
+        echo "Installing {{ $to }}..."
+        sudo dnf install -y {{ $to | quote }}
+    fi
+fi
+{{ end -}}
+{{ end -}}

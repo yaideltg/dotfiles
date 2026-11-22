@@ -8,8 +8,9 @@ packages:
       - mpv
       # Font for Emacs
       - jetbrains-mono-fonts
-      # cliamp decodes streams and converts downloads to mp3 through it
-      - ffmpeg-free
+      # cliamp decodes streams and converts downloads to mp3 through it.
+      # Full build from RPM Fusion (see rpmfusion.swap), not ffmpeg-free
+      - ffmpeg
       # Jinx (Emacs spell checker) compiles its native module against enchant
       - gcc
       - pkgconf-pkg-config
@@ -47,6 +48,15 @@ packages:
         - docker-buildx
       apptainer:
         - apptainer
+    # RPM Fusion (free) replacements for Fedora packages built without
+    # patented codecs, as <fedora package>: <rpmfusion package>.
+    # Swapped when the Fedora one is installed, installed otherwise.
+    rpmfusion:
+      swap:
+        # H.264/HEVC decoding (phone videos play as audio only without it)
+        ffmpeg-free: ffmpeg
+        # VA-API hardware decoding of H.264/HEVC on AMD/Intel GPUs
+        mesa-va-drivers: mesa-va-drivers-freeworld
     flatpak:
       - com.bitwarden.desktop
       - md.obsidian.Obsidian
