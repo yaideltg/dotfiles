@@ -1,30 +1,77 @@
 #!/bin/bash
-# Block idle and suspend while cliamp is playing; release when paused or closed.
+# Keep the system awake while cliamp plays; release when paused or closed.
+#
+# Suspend is blocked through logind. GNOME ignores logind idle locks, so
+# screen blanking is blocked through gnome-session instead, and only while
+# the sound goes out over HDMI/DisplayPort: a monitor in standby mutes its
+# speakers, so blanking the screen would silence the music.
 set -u
 
 CLIAMP="$HOME/.local/share/mise/shims/cliamp"
 INTERVAL=15
-holder=
+# Polls in a row without playback before letting go, so the brief gap
+# between tracks doesn't drop the locks (the screen would blank at once
+# after a long idle).
+MISSES_TO_RELEASE=2
 
-release() {
-    if [[ -n $holder ]]; then
-        kill "$holder" 2>/dev/null || true
-        wait "$holder" 2>/dev/null || true
-        holder=
+sleep_holder=
+idle_holder=
+misses=0
+
+is_playing() {
+    "$CLIAMP" status 2>/dev/null | grep -q '^State: playing'
+}
+
+plays_through_monitor() {
+    wpctl inspect @DEFAULT_AUDIO_SINK@ 2>/dev/null \
+        | grep -qE 'node\.name = "[^"]*(hdmi|displayport)'
+}
+
+alive() {
+    [[ -n $1 ]] && kill -0 "$1" 2>/dev/null
+}
+
+# hold VAR COMMAND...: run COMMAND in the background unless VAR's pid lives
+hold() {
+    local -n pid=$1
+    shift
+    if ! alive "$pid"; then
+        "$@" &
+        pid=$!
     fi
 }
-trap 'release; exit 0' INT TERM
-trap release EXIT
+
+release() {
+    local -n pid=$1
+    if [[ -n $pid ]]; then
+        kill "$pid" 2>/dev/null || true
+        wait "$pid" 2>/dev/null || true
+        pid=
+    fi
+}
+
+release_all() {
+    release sleep_holder
+    release idle_holder
+}
+
+trap 'release_all; exit 0' INT TERM
+trap release_all EXIT
 
 while true; do
-    if "$CLIAMP" status 2>/dev/null | grep -q '^State: playing'; then
-        if [[ -z $holder ]] || ! kill -0 "$holder" 2>/dev/null; then
-            systemd-inhibit --what=idle:sleep --who=cliamp --why="Playing music" \
-                sleep infinity &
-            holder=$!
+    if is_playing; then
+        misses=0
+        hold sleep_holder systemd-inhibit --what=sleep --who=cliamp \
+            --why="Playing music" sleep infinity
+        if plays_through_monitor; then
+            hold idle_holder gnome-session-inhibit --inhibit=idle \
+                --app-id=cliamp --reason="Playing music through the monitor" \
+                --inhibit-only
+        else
+            release idle_holder
         fi
-    else
-        release
+    elif (( ++misses >= MISSES_TO_RELEASE )); then
+        release_all
     fi
     sleep "$INTERVAL" &
     wait $!
